@@ -1,8 +1,9 @@
 import json
 
+FILE_PATH = "data/products.json"
 
 def load_catalogue():
-    with open("data/products.json", "r") as file:
+    with open(FILE_PATH, "r") as file:
         return json.load(file)
 
 
