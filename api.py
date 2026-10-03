@@ -6,6 +6,12 @@ from src.quatation import create_quotation
 
 app = FastAPI(title="MSME Quotation Engine")
 
+
+
+# ==========================================
+# PYDANTIC MODELS
+# ==========================================
+
 class Product(BaseModel):
     product_id: str
     name: str
@@ -37,10 +43,20 @@ def home():
     return {"message": "MSME Quotation Engine API chalu chhe"}
 
 
+
+# ==========================================
+# GET - ALL PRODUCTS
+# ==========================================
+
 @app.get("/products")
 def list_products():
     return load_catalogue()
 
+
+
+# ==========================================
+# GET - SINGLE PRODUCT
+# ==========================================
 
 @app.get("/products/{product_id}")
 def product(product_id: str):
@@ -49,6 +65,11 @@ def product(product_id: str):
     except ValueError as error:
         raise HTTPException(status_code=404, detail=str(error))
 
+
+
+# ==========================================
+# POST - ADD Quatation
+# ==========================================
 
 @app.post("/quotation")
 def quotation(request: QuotationRequest):
@@ -61,6 +82,13 @@ def quotation(request: QuotationRequest):
 
     return {"customer": request.customer_name, **result}
 
+
+
+
+# ==========================================
+# PUT - COMPLETE UPDATE
+# ==========================================
+
 @app.put("/products/{product_id}")
 def update(product_id: str, product: ProductUpdate):
     try:
@@ -70,28 +98,19 @@ def update(product_id: str, product: ProductUpdate):
             {
                 "product_id": product.product_id,
                 "name": product.name,
-                "price": product.price
+                "price": product.price,
+                "quantity": product.quantity
             }
         )
-        
-        # updated_product = update_product(
-        #     product_id,
-        #     {
-        #         "name": product.name,
-        #         "price": product.price
-        #     }
-        # )
-
-        # return {
-        #     "message": "Product updated successfully",
-        #     "product_id": product_id,
-        #     "product": updated_product
-        # }
 
     except ValueError as error:
         raise HTTPException(status_code=404, detail=str(error))
 
 
+
+# ==========================================
+# PATCH - PARTIAL UPDATE
+# ==========================================
 
 @app.patch("/products/{product_id}")
 def patch_product(product_id: str, product: ProductPatch):
@@ -110,6 +129,11 @@ def patch_product(product_id: str, product: ProductPatch):
         raise HTTPException(status_code=404, detail=str(error))
 
 
+
+
+# ==========================================
+# DELETE - DELETE PRODUCT
+# ==========================================
 
 @app.delete("/products/{product_id}")
 def delete(product_id: str):

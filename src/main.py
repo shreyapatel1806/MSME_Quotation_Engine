@@ -1,4 +1,4 @@
-from src.quatation import create_quotation
+from quatation import create_quotation
 
 def main():
     customer_name = input("Enter customer name: ")
