@@ -1,5 +1,4 @@
-from catalogue import get_product
-
+from src.catalogue import get_product
 
 TAX_RATE = 18
 
@@ -19,27 +18,25 @@ def create_quotation(items):
     subtotal = 0
 
     for item in items:
-
         product = get_product(item["product_id"])
+
         quantity = item["quantity"]
 
         if quantity <= 0:
-            raise ValueError(
-                "Quantity must be greater than zero"
-            )
+            raise ValueError("Quantity must be greater than zero")
 
         unit_price = product["price"]
-        total = unit_price * quantity
+        total_price = unit_price * quantity
 
         quotation_items.append({
             "product_id": item["product_id"],
             "name": product["name"],
             "quantity": quantity,
             "unit_price": unit_price,
-            "total": total
+            "total": total_price
         })
 
-        subtotal += total
+        subtotal += total_price
 
     discount = calculate_discount(subtotal)
 
@@ -56,3 +53,31 @@ def create_quotation(items):
         "tax": tax,
         "grand_total": grand_total
     }
+
+
+
+def display_quotation(customer_name, quotation):
+    print("\n" + "=" * 50)
+    print("           MSME QUOTATION")
+    print("=" * 50)
+
+    print(f"Customer: {customer_name}")
+
+    print("\nItems:")
+    print("-" * 50)
+
+    for item in quotation["items"]:
+        print(
+            f'{item["name"]} | '
+            f'{item["quantity"]} × ₹{item["unit_price"]:.2f} '
+            f'= ₹{item["total"]:.2f}'
+        )
+
+    print("-" * 50)
+
+    print(f'Subtotal:     ₹{quotation["subtotal"]:.2f}')
+    print(f'Discount:     ₹{quotation["discount"]:.2f}')
+    print(f'Tax:          ₹{quotation["tax"]:.2f}')
+    print(f'Grand Total:  ₹{quotation["grand_total"]:.2f}')
+
+    print("=" * 50)
